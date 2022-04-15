@@ -1,40 +1,29 @@
 <template>
-  <div class="vuci-layout-header">
-    <a-breadcrumb :routes="breadcrumbs">
-      <template v-slot:itemRender="{ route }">
-        <router-link v-if="route.path" :to="route.path">
-          {{ $t(route.title) }}
-        </router-link>
-        <span v-else>{{ $t(route.title) }}</span>
-      </template>
-    </a-breadcrumb>
-    <div class="header-right">
-      <a-tooltip :title="fullscreen ? $t('Exit Full Screen') : $t('Full Screen')">
-        <a-icon :type="fullscreen ? 'fullscreen-exit' : 'fullscreen'" style="cursor: pointer; margin-top: 8px" @click="fullScreen"/>
-      </a-tooltip>
-      <a-dropdown>
-        <a href="javascript:void(0)">
-          {{ $t('Language') }}
-          <a-icon type="down"/>
-        </a>
-        <a-menu slot="overlay" @click="onLangClick" :selectedKeys="selectedLangKeys">
-          <a-menu-item key="en">English</a-menu-item>
-          <a-menu-item key="zh-cn">简体中文</a-menu-item>
-          <a-menu-item key="zh-tw">繁体中文</a-menu-item>
-          <a-menu-item key="ja">日本語</a-menu-item>
-          <a-menu-item key="auto">{{ $t('Automatic') }}</a-menu-item>
-        </a-menu>
-      </a-dropdown>
-      <a-dropdown>
-        <a href="javascript:void(0)">
-          <span>{{ username }}</span>
-          <a-icon type="down"/>
-        </a>
-        <a-menu slot="overlay" @click="onUserClick">
-          <a-menu-item key="logout">{{ $t('Logout') }}</a-menu-item>
-          <a-menu-item key="reboot">{{ $t('Reboot') }}</a-menu-item>
-        </a-menu>
-      </a-dropdown>
+  <div class="header">
+    <router-link class="home-link" to="/">
+      <img src="/icons/teltonika_blue.svg" alt="">
+    </router-link>
+    <div class="header-info">
+      <div class="header-item">
+        user
+        <div class="header-item-data">
+          {{username}}
+        </div>
+      </div>
+      <div class="header-item">
+        fw version
+        <div class="header-item-data">
+          {{fw}}
+        </div>
+      </div>
+      <div class="header-item" id="logout" @click="logout">
+        -
+        <div class="header-item-data">
+          <div class="logout">
+            logout
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +35,8 @@ export default {
   data () {
     return {
       breadcrumbs: [],
-      username: ''
+      username: '',
+      fw: ''
     }
   },
   computed: {
@@ -54,6 +44,9 @@ export default {
       return [this.lang]
     },
     ...mapState(['lang', 'fullscreen'])
+  },
+  timers: {
+    getFW: { time: 2000, autostart: true, immediate: true, repeat: true }
   },
   methods: {
     fullScreen () {
@@ -118,6 +111,12 @@ export default {
           }
         })
       }
+    },
+    logout () {
+      this.$router.push('/login')
+    },
+    getFW () {
+      this.$system.getInfo().then(({ release }) => { this.fw = release.revision })
     }
   },
   watch: {
@@ -132,25 +131,45 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-.vuci-layout-header {
-  margin: 10px 0;
+<style>
+.header {
+  padding-top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 24px;
-
-  .ant-breadcrumb-link {
-    font-size: 24px;
-  }
-
-  .header-right {
-    display: flex;
-
-    > * {
-      margin-right: 20px;
-    }
-  }
+}
+.home-link {
+  cursor: pointer;
+}
+.header-info {
+  font-family: "Oswald",sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  display: flex;
+  color: #0054a6;
+  text-transform: uppercase;
+}
+.header-item {
+  padding: 10px;
+  color: #6f6f6f;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  display: block;
+}
+.header-item-data {
+  color: #0054a6;
+  font-size: 16px;
+  display: block;
+}
+#logout {
+  color: #ffffff;
+}
+.logout {
+  background-image: url(/icons/logout.png);
+  background-repeat: no-repeat;
+  background-position: right 4px;
+  padding-right: 1.5em;
+  background-color: transparent;
 }
 </style>

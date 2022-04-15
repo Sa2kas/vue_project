@@ -4,6 +4,7 @@
     "Please input username": "Please input username",
     "Please input password": "Please input password",
     "Login": "Login",
-    "Wrong password given!": "Wrong password given!"
+    "Wrong password given!": "Wrong password given!",
+    "Please enter your username and password": "Please enter your username and password"
   }
 }

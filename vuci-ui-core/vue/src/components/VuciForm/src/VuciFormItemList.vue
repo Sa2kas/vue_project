@@ -5,7 +5,8 @@
       <template v-if="inputVisible">
         <a-input size="small" ref="input" v-model="inputValue" @change="validate" @blur="handleinputConfirm" @pressEnter="handleinputConfirm"/>
       </template>
-      <a-button v-else size="small" type="primary" @click="showInput" style="width: 100px">+ {{ $t('Add') }}</a-button>
+      <button v-else class="actionButton" @click="showInput">+ {{ $t('Add') }}</button>
+      <!-- <a-button v-else size="small" type="primary" @click="showInput" style="width: 100px">+ {{ $t('Add') }}</a-button> -->
     </div>
   </vuci-form-item-template>
 </template>
