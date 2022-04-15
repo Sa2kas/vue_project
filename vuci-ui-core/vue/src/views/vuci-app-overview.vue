@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     changePlace () {
-      // this.items.sort((a, b) => a.dragIndex - b.dragIndex)
       if (this.items[this.existingIndex].dragIndex > this.items[this.newDragIndex].dragIndex) {
         for (let index = 0; index < this.items.length; index++) {
           if (this.items[index].dragIndex > this.items[this.newDragIndex].dragIndex && this.items[index].dragIndex < this.items[this.existingIndex].dragIndex) {

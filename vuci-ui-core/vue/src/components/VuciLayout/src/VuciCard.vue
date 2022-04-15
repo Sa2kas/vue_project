@@ -49,8 +49,6 @@ export default {
   watch: {
     index (newIndex, oldIndex) {
       if (this.item.id === this.elemDragIndex) {
-        // this.item.dragIndex = newIndex
-        // this.refreshList()
       }
     }
   }
