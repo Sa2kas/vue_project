@@ -88,21 +88,23 @@ export default {
   },
   methods: {
     changePlace () {
-      if (this.items[this.existingIndex].dragIndex > this.items[this.newDragIndex].dragIndex) {
+      const existingPlace = this.items[this.existingIndex].dragIndex
+      const newPlace = this.items[this.newDragIndex].dragIndex
+      if (existingPlace > newPlace) {
         for (let index = 0; index < this.items.length; index++) {
-          if (this.items[index].dragIndex > this.items[this.newDragIndex].dragIndex && this.items[index].dragIndex < this.items[this.existingIndex].dragIndex) {
+          if (this.items[index].dragIndex > newPlace && this.items[index].dragIndex < existingPlace) {
             this.items[index].dragIndex += 1
           }
         }
-        this.items[this.existingIndex].dragIndex = this.items[this.newDragIndex].dragIndex
+        this.items[this.existingIndex].dragIndex = newPlace
         this.items[this.newDragIndex].dragIndex += 1
-      } else if (this.items[this.existingIndex].dragIndex < this.items[this.newDragIndex].dragIndex) {
+      } else if (existingPlace < newPlace) {
         for (let index = 0; index < this.items.length; index++) {
-          if (this.items[index].dragIndex < this.items[this.newDragIndex].dragIndex && this.items[index].dragIndex > this.items[this.existingIndex].dragIndex) {
+          if (this.items[index].dragIndex < newPlace && this.items[index].dragIndex > existingPlace) {
             this.items[index].dragIndex -= 1
           }
         }
-        this.items[this.existingIndex].dragIndex = this.items[this.newDragIndex].dragIndex
+        this.items[this.existingIndex].dragIndex = newPlace
         this.items[this.newDragIndex].dragIndex -= 1
       }
       this.items.sort((a, b) => a.dragIndex - b.dragIndex)
