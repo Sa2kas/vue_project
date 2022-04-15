@@ -8,7 +8,9 @@
         <div class="card-row-title">
           {{column.title}}
         </div>
-        <div class="card-row-data"></div>
+        <div class="card-row-data">
+          Data
+        </div>
       </div>
       <slot></slot>
     </div>
@@ -74,17 +76,25 @@ export default {
     font-size: 18px;
     padding-bottom: 5px;
     border-bottom: 1px solid #a7a7a7;
-  }
-  .vuci-card-body {
-
+    color: #444;
   }
   .card-row {
-
+    border-bottom: 1px solid #e4e4e4;
+    padding: 0.5em 0;
+  }
+  .card-row:last-child {
+    border-bottom: none;
   }
   .card-row-title {
-
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #444;
   }
   .card-row-data {
-
+    font-family: "Open Sans", sans-serif;
+    font-size: 11px;
+    color: #7e7e7e;
+    padding-bottom: 0.1em;
   }
 </style>
