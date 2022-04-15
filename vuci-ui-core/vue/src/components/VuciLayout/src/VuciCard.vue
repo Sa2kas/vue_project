@@ -1,18 +1,16 @@
 <template>
   <div :class="!started ? 'vuci-card' : 'vuci-draggable-card'">
     <div class="vuci-card-header">
-      {{item.name}} | dragIndex {{item.dragIndex}} |
-      <span v-if="item.dragIndex==elemId"> {{index}}</span>
+      {{item.name}}
     </div>
     <div class="vuci-card-body">
-      <h3>{{item.id}}</h3>
       <div class="card-row" v-for="(column, indexC) in item.columns" :key="indexC">
         <div class="card-row-title">
           {{column.title}}
         </div>
         <div class="card-row-data"></div>
       </div>
-      <slot>{{kazkas}}</slot>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -20,7 +18,6 @@
 export default {
   data () {
     return {
-      kazkas: 'veikia'
     }
   },
   props: {
@@ -33,7 +30,7 @@ export default {
       required: false,
       default: 0
     },
-    elemId: {
+    elemDragIndex: {
       type: Number,
       required: false,
       default: 0
@@ -51,9 +48,7 @@ export default {
   },
   watch: {
     index (newIndex, oldIndex) {
-      if (this.item.id === this.elemId) {
-        // this.item.dragIndex = newIndex
-        // this.refreshList()
+      if (this.item.id === this.elemDragIndex) {
       }
     }
   }
