@@ -60,7 +60,7 @@ export default {
           id: 2
         },
         {
-          name: 'wan',
+          name: 'wan6',
           columns: [
             { title: 'Type' }
           ],
@@ -132,7 +132,6 @@ export default {
   @media only screen and (max-width: 1100px) {
     .overview {
       padding-left: 8%;
-      /* cursor: grab; */
     }
   }
 </style>
