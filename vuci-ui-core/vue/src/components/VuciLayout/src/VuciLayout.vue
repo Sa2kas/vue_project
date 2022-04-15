@@ -1,32 +1,42 @@
 <template>
-  <a-layout>
-    <a-layout-sider :style="{ overflow: 'auto', height: '100vh'}">
-      <vuci-side/>
-    </a-layout-sider>
-    <a-layout>
-      <a-layout-content style="padding: 0 16px 16px; height: 100vh">
-        <vuci-header/>
-        <div ref="vuci-main-content" class="vuci-main-content">
+  <div class="page">
+    <!-- naudojamas kai mazesnis ekranas -->
+    <div class="page-header">
+      <vuci-header-2/>
+    </div>
+    <div class="page-body">
+      <div class="page-left-side">
+        <vuci-left-side/>
+      </div>
+      <!-- naudojamas kai ekranas didesnis -->
+      <div class="page-content">
+        <div class="content-header">
+          <vuci-header/>
+        </div>
+        <div class="content-body">
           <transition name="main" mode="out-in">
             <router-view></router-view>
           </transition>
-          <a-back-top :target="() => $refs['vuci-main-content']"/>
         </div>
-        <div style="position: fixed; bottom: 10px; right: 40px">
-          <a href="https://github.com/zhaojh329/vuci" target="_blank">Powered by vuci</a>
-        </div>
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+      </div>
+    </div>
+    <div class="page-footer">
+      <vuci-footer/>
+    </div>
+  </div>
 </template>
 <script>
-import VuciSide from './VuciSide.vue'
-import VuciHeader from './VuciHeader'
+import VuciLeftSide from './VuciLeftSide.vue'
+import VuciHeader from './VuciHeader.vue'
+import VuciHeader2 from './VuciHeader2.vue'
+import VuciFooter from './VuciFooter.vue'
 
 export default {
   components: {
-    VuciSide,
-    VuciHeader
+    VuciLeftSide,
+    VuciHeader,
+    VuciHeader2,
+    VuciFooter
   },
   computed: {
     hostname () {
@@ -46,26 +56,65 @@ export default {
 }
 </script>
 
-<style scoped>
-.main-enter, .main-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
+<style>
+.page {
+  flex-direction: column;
+  display: flex;
 }
-
-.main-enter-active {
-  transition: all 0.2s;
+.page-header {
+  display: none;
 }
-
-.main-leave-active {
-  position: absolute;
-  transition: all 0.3s;
+.page-body {
+  flex-direction: row;
+  display: flex;
+  min-height: calc(100vh - 40px);
 }
-
-.vuci-main-content {
-  overflow: hidden;
-  overflow-y: visible;
+.page-left-side {
+  min-height: 100%;
+  display: flex;
+}
+.page-content {
+  padding: 0 16px 16px;
+  width: calc(100vw - 300px);
+  max-width: 100%;
+}
+.content-header {
+  margin-bottom: 60px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: 300px;
+  padding-right: 1em;
+  padding-left: 1em;
+  border-bottom: 1px solid #e4e4e4;
+}
+.content-body {
   padding: 5px;
-  background-color: white;
-  height: calc(100vh - 100px);
+  background-color: #fff;
+}
+.page-footer {
+  border: unset;
+  border-top: 1px solid #e4e4e4;
+}
+@media only screen and (max-width: 1100px) {
+  .page-left-side {
+    display: none;
+  }
+  .content-header {
+    display: none;
+  }
+  .page-header {
+    display: unset;
+  }
+  .page-body {
+  margin-top: 76px;
+  }
+  .page-content {
+    width: 100vw;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .page-content {
+    padding: unset;
+  }
 }
 </style>

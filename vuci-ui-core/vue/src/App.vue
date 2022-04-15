@@ -1,12 +1,11 @@
 <template>
-  <a-config-provider id="app" :locale="locale">
-    <fullscreen ref="fullscreen">
-      <a-spin v-if="loaded" :spinning="spinning > 0" :tip="spintip || $t('Loading...')" size="large">
+  <div id="app" :locale="locale">
+    <!-- <fullscreen ref="fullscreen"> -->
+      <!-- <a-spin v-if="loaded" :spinning="spinning > 0" :tip="spintip || $t('Loading...')" size="large"> -->
         <router-view></router-view>
-      </a-spin>
-    </fullscreen>
-    <left-side-bar></left-side-bar>
-  </a-config-provider>
+      <!-- </a-spin> -->
+    <!-- </fullscreen> -->
+  </div>
 </template>
 
 <script>

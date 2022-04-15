@@ -55,6 +55,20 @@ class Interface {
     return rv
   }
 
+  getIp () {
+    // var rt = this.status['ipv4-address'][0].address + '/' + this.status['ipv4-address'][0].mask
+    var ip = '-'
+    if (this.getIPv4Addrs().join(',')) {
+      ip = this.status['ipv4-address'][0].address + '/' + this.status['ipv4-address'][0].mask
+    }
+    return ip
+  }
+
+  getProtocol () {
+    var proto = this.status.proto
+    return proto
+  }
+
   getIPv4Gateway () {
     const rt = this.status.route
 

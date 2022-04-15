@@ -1,11 +1,11 @@
 {
     "status": {
         "title": "Status",
-        "index": 40
+        "index": 10
     },
     "system": {
         "title": "System",
-        "index": 10
+        "index": 40
     },
     "network": {
         "title": "Network",
@@ -17,6 +17,6 @@
     },
     "system/general": {
         "title": "General",
-        "index": 10
+        "index": 40
     }
 }

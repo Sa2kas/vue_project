@@ -25,7 +25,7 @@ const router = new Router({
         // eslint-disable-next-line no-eval
         return resolve(eval(r.data))
       }).catch(() => {
-        return resolve(require('@/views/Login.vue'))
+        return resolve(require('@/views/vuci-app-login.vue'))
       })
     }
   },
@@ -41,7 +41,7 @@ const router = new Router({
           // eslint-disable-next-line no-eval
           return resolve(eval(r.data))
         }).catch(() => {
-          return resolve(require('@/views/Home.vue'))
+          return resolve(require('@/views/vuci-app-home.vue'))
         })
       },
       meta: {
@@ -49,6 +49,27 @@ const router = new Router({
       }
     }]
   },
+  // home pakeistas į status overview
+  // {
+  //   path: '/',
+  //   redirect: '/status/overview',
+  //   component: () =>
+  //     import('@/components/VuciLayout'),
+  //   children: [{
+  //     path: 'status/overview',
+  //     component: resolve => {
+  //       axios.get(`/views/vuci-app-overview.js?_t=${new Date().getTime()}`).then(r => {
+  //         // eslint-disable-next-line no-eval
+  //         return resolve(eval(r.data))
+  //       }).catch(() => {
+  //         return resolve(require('@/views/vuci-app-overview.vue'))
+  //       })
+  //     },
+  //     meta: {
+  //       title: 'Status overview'
+  //     }
+  //   }]
+  // },
   {
     path: '*',
     component: () =>

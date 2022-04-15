@@ -1,24 +1,26 @@
 <template>
+<!-- šiek tiek modifikuotas "Ant Design Vue" ir pakeista dalis elementų-->
   <component :is="container" :title="title">
-    <a-table v-if="columns" :columns="tableColumns" :data-source="dataSource">
-      <template v-if="title" #title>
-        <span style="font-size: 16px; font-weight: 500; color: rgba(0, 0, 0, 0.85)">{{ title }}</span>
+    <vuci-table v-if="columns"
+    :item="item"
+    :name="title"
+    :index="index">
+      <template v-slot:tableData="slotProps">
+        <span v-if="slotProps.column.dataIndex != '.name'">
+          <slot :name="slotProps.column.dataIndex" :s="slotProps.data">
+            {{slotProps.column.dataIndex}} <br/>
+            {{slotProps.data}}
+          </slot>
+         </span>
+        <span v-else>
+          <a-button v-if="sortable" size="small" type="primary" style="margin-right: 5px" @click="handleSort(sid, -1)" icon="arrow-up"/>
+          <a-button v-if="sortable" size="small" type="primary" style="margin-right: 5px" @click="handleSort(sid, 1)" icon="arrow-down"/>
+          <button class="iconButton" v-if="addremove" @click="delSection(slotProps.data['.name'])">
+            <img src="/icons/delete.png" alt="" style="height: 24px;">
+          </button>
+        </span>
       </template>
-      <template v-for="c in columns" v-slot:[c.name]="text,record">
-        <slot :name="c.name" :s="record"/>
-      </template>
-      <template v-for="c in columns.filter(c => c.titleSlot)" v-slot:[c.titleSlot]>
-        <slot :name="c.titleSlot"/>
-      </template>
-      <template v-slot:vuci-form-table-action="sid">
-        <a-button v-if="sortable" size="small" type="primary" style="margin-right: 5px" @click="handleSort(sid, -1)" icon="arrow-up"/>
-        <a-button v-if="sortable" size="small" type="primary" style="margin-right: 5px" @click="handleSort(sid, 1)" icon="arrow-down"/>
-        <a-button v-if="addremove" size="small" type="danger" @click="delSection(sid)">{{ $t('Delete') }}</a-button>
-      </template>
-      <template v-if="expanded" #expandedRowRender="record">
-        <slot name="expandedRowRender" :s="record"/>
-      </template>
-    </a-table>
+    </vuci-table>
     <template v-else-if="collapsible">
       <a-collapse v-model="collapse" :accordion="accordion">
         <a-collapse-panel v-for="s in sections" :key="s['.name']">
@@ -35,25 +37,39 @@
       </a-collapse>
     </template>
     <template v-else>
-      <div v-for="(s, i) in sections" :key="s['.name']">
+      <div :class="showBorder == true ? 'element' : ''" v-for="(s, i) in sections" :key="s['.name']">
         <vuci-typed-section-body :sid="s['.name']">
           <slot :s="s"/>
         </vuci-typed-section-body>
         <a-divider v-if="i < sections.length - 1"/>
       </div>
+      <span v-if="sections.length <= 0" style="color: #444;">
+        This section contains no values yet <br/>
+      </span>
     </template>
-    <a-button v-if="addremove" type="primary" size="small" style="margin-top: 10px" @click="handleAdd">{{ $t('Add') }}</a-button>
+    <button v-if="addremove" class="actionButton" @click="handleAdd">{{ $t('Add') }}</button>
   </component>
 </template>
 
 <script>
 import VuciSection from './VuciSection.vue'
 import VuciTypedSectionBody from './VuciTypedSectionBody.vue'
+import VuciTable from '../../VuciLayout/src/VuciTable.vue'
 
 export default {
   name: 'VuciTypedSection',
   mixins: [VuciSection],
   props: {
+    showBorder: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    index: {
+      type: Number,
+      required: false,
+      dafault: 0
+    },
     type: {
       type: String,
       required: true
@@ -75,7 +91,8 @@ export default {
     filter: Function
   },
   components: {
-    VuciTypedSectionBody
+    VuciTypedSectionBody,
+    VuciTable
   },
   data () {
     return {
@@ -116,6 +133,10 @@ export default {
       }
 
       return columns
+    },
+    item () {
+      const item = { columns: this.tableColumns, data: this.dataSource }
+      return item
     }
   },
   methods: {
@@ -208,3 +229,16 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .element {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+    margin-bottom: 5px;
+  }
+  @media only screen and (max-width: 500px) {
+    .element {
+      border: unset;
+    }
+  }
+</style>

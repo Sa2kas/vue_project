@@ -2,7 +2,7 @@
   "DHCP/DNS": "DHCP/DNS",
   "dhcp" : {
     "Server Settings": "Server Settings",
-    "Resolv and Hosts Files": "Resolv and Hosts Files",
+    "Resolv and Hosts Files": "Resolve and Hosts Files",
     "DHCP Server": "DHCP Server",
     "Static Leases": "Static Leases",
     "Domain required": "Domain required",

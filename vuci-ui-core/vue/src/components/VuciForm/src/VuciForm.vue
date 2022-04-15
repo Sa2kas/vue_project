@@ -1,14 +1,15 @@
 <template>
-  <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+<!-- šiek tiek modifikuotas "Ant Design Vue" -->
+  <a-form-model class="form" ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
     <slot v-if="loaded"/>
     <slot name="footer">
-      <a-form-model-item :colon="false">
+      <a-form-model-item class="form-item" :colon="false">
         <template #label>
           <span/>
         </template>
-        <div style="float: right">
-          <a-button type="primary" style="margin-right: 10px" @click="apply">{{ $t('Save & Apply') }}</a-button>
-          <a-button type="danger" @click="reset">{{ $t('Reset') }}</a-button>
+        <div class="form-footer">
+          <button class="actionButton" @click="apply();close()">{{ $t('Save & Apply') }}</button>
+          <button class="actionButton" @click="reset">{{ $t('Reset') }}</button>
         </div>
       </a-form-model-item>
     </slot>
@@ -36,6 +37,9 @@ export default {
     }
   },
   methods: {
+    close: function () {
+      this.$emit('close')
+    },
     validate () {
       return new Promise(resolve => {
         this.$refs.form.validate(valid => resolve(valid))
@@ -134,3 +138,127 @@ export default {
   }
 }
 </script>
+
+<style>
+  .form .ant-card-bordered {
+    border: none;
+  }
+  .form .ant-card-body {
+    color: #0054a6;
+    font-family: "Open Sans", sans-serif;
+  }
+  .form .ant-tabs-nav-scroll {
+    text-transform: uppercase;
+    color: #444;
+  }
+  .form:hover .ant-tabs-tab {
+    color: #444;
+  }
+  .ant-tabs-bar {
+    height: 47px;
+    margin-bottom: 0;
+  }
+  .ant-tabs-tabpane-active {
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-top: unset;
+  }
+  .form .ant-tabs-ink-bar, .ant-tabs-ink-bar-animated {
+    background-color: unset;
+  }
+  .form-item {
+    text-align: right;
+  }
+  .form .ant-tabs-tab-active {
+    color: #0054a6;
+    border: 1px solid #e4e4e4;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom: 2px solid#fff;
+    background-color: #fff;
+  }
+  .form:hover .ant-tabs-tab-active {
+    color: #0054a6;
+  }
+  .ant-switch {
+    background-color: #fff;
+    border: 1.5px solid #a7a7a7;
+    height: 23px;
+  }
+  .ant-switch:after {
+    background-color: #a7a7a7;
+    border: 1.5px solid #a7a7a7;
+  }
+  .ant-switch-checked::after {
+    background-color: #0054a6;
+    border: none;
+    margin-right: 1px;
+  }
+  .form-item {
+    display: flex;
+    justify-content: right;
+  }
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+  .ant-col-14 {
+    width: 100%;
+    max-width: 300px;
+  }
+  .ant-form-item label {
+    all: unset;
+    color: #444;
+    font-family: "Open Sans", sans-serif;
+    word-wrap: break-word;
+  }
+  .ant-modal-confirm-title {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+  }
+  .ant-modal-confirm-body > .anticon svg {
+    color: #0054a6;
+  }
+  .actionButton, .ant-btn {
+    all: unset;
+    transition: border .2s linear,color .2s linear;
+    font-family: "Oswald",sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: unset;
+    border: 1px solid #0054a6;
+    color: #0054a6;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.2em 1em;
+    cursor: pointer;
+    letter-spacing: 0.11em;
+    margin: 2px;
+    flex-direction: column;
+    line-height: 1.5em;
+  }
+  .ant-btn:hover {
+    color: #0054a6;
+    border-color: #0054a6;
+    background-color: #fff;
+  }
+  .ant-btn span {
+    all: unset;
+  }
+  .ant-input {
+    font-family: "Open Sans", sans-serif;
+  }
+  .iconButton {
+    padding: 0;
+    background: none;
+    border: none;
+    margin: 1px 3px;
+    cursor: pointer;
+  }
+  .ant-card-head {
+    display: none;
+  }
+  .ant-divider-horizontal {
+    height: 0;
+  }
+</style>

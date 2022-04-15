@@ -1,27 +1,27 @@
 <template>
-    <div class="background">
-      <form method="POST" @submit.prevent="updateTime">
+  <div class="background">
+    <form method="POST" @submit.prevent="updateTime">
+      <div class="right-align">
+          <label for="current">
+            Current system time
+          </label>
+      </div>
+      <div class="left-align">
+          <span><b>{{ localTime }}</b></span>
+          <button type="button" class="button" @click="syncTime" role="button" style="margin:0 1rem;">SYNC WITH BROWSER</button>
+          <button type="button" class="button" @click="setDummyTime">DummyTime</button>
+      </div>
         <div class="right-align">
-            <label for="current">
-              Current system time
-            </label>
+          <label for="timezone">Select Timezone</label>
         </div>
-        <div class="left-align">
-            <span><b>{{ localTime }}</b></span>
-            <button type="button" class="button" @click="syncTime" role="button" style="margin:0 1rem;">SYNC WITH BROWSER</button>
-            <button type="button" class="button" @click="setDummyTime">DummyTime</button>
-        </div>
-          <div class="right-align">
-            <label for="timezone">Select Timezone</label>
-          </div>
-        <select class="left-align" name="timezone" @change="selectTimezone($event.target.value)">
-            <option v-for="(zone, index) in $zoneinfo" :key="zone[0]" :value="index" :selected='zoneName == zone[0]'>{{ zone[0] }}</option>
-        </select>
-        <div class="span-2 right-align mr-3">
-          <button class="button" type="submit">Save & Apply</button>
-        </div>
-      </form>
-    </div>
+      <select class="left-align" name="timezone" @change="selectTimezone($event.target.value)">
+          <option v-for="(zone, index) in $zoneinfo" :key="zone[0]" :value="index" :selected='zoneName == zone[0]'>{{ zone[0] }}</option>
+      </select>
+      <div class="span-2 right-align mr-3">
+        <button class="button" type="submit">Save & Apply</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
