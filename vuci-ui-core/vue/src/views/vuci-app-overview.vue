@@ -1,14 +1,14 @@
 <template>
   <div class="overview">
     <div v-for="item in items" :key="item.id" class="element"
-    @dragover="naujas = item.dragIndex;changePlace();"
-      @dragend="started = false; esamas = -2; naujas = -1" @drag="esamas = item.dragIndex" @dragstart="started = true"
+    @dragover="newDragIndex = item.dragIndex;changePlace();"
+      @dragend="started = false; existingIndex = -2; newDragIndex = -1" @drag="existingIndex = item.dragIndex" @dragstart="started = true"
         >
         <vuci-card
-          :style="[!(started && esamas == item.dragIndex) ? {'display': 'block'} : {'opacity': '40%'}]"
-          :elemId="esamas"
+          :style="[!(started && existingIndex == item.dragIndex) ? {'display': 'block'} : {'opacity': '40%'}]"
+          :elemDragIndex="existingIndex"
           :item="item"
-          :index="naujas"
+          :index="newDragIndex"
           :started="started"
           @refList="sort"
           draggable
@@ -27,75 +27,85 @@ export default {
   data () {
     return {
       started: false,
-      naujas: -1,
-      esamas: -2,
+      newDragIndex: -1,
+      existingIndex: -2,
       items: [
         {
-          name: 'pirmas',
+          name: 'system',
           columns: [
-            { dataIndex: 'ipaddr', title: this.$t('IPv4-Address') },
-            { dataIndex: 'macaddr', title: this.$t('MAC-Address') },
-            { dataIndex: 'device', title: this.$t('active-routes.Device') }
+            { title: 'Router uptime' },
+            { title: 'Local device time' },
+            { title: 'Memory usage' },
+            { title: 'Firmware version' }
           ],
           dragIndex: 0,
           id: 0
         },
         {
-          name: 'antras',
+          name: 'lan',
           columns: [
-            { dataIndex: 'ipaddr', title: this.$t('IPv4-Address') },
-            { dataIndex: 'macaddr', title: this.$t('MAC-Address') },
-            { dataIndex: 'device', title: this.$t('active-routes.Device') }
+            { title: 'Type' },
+            { title: 'IP address' }
           ],
           dragIndex: 1,
           id: 1
         },
         {
-          name: 'trecias',
+          name: 'wan',
           columns: [
-            { dataIndex: 'ipaddr', title: this.$t('IPv4-Address') },
-            { dataIndex: 'macaddr', title: this.$t('MAC-Address') },
-            { dataIndex: 'device', title: this.$t('active-routes.Device') }
+            { title: 'Type' },
+            { title: 'Failover' }
           ],
           dragIndex: 2,
           id: 2
         },
         {
-          name: 'ketvirtas',
+          name: 'wan',
           columns: [
-            { dataIndex: 'ipaddr', title: this.$t('IPv4-Address') },
-            { dataIndex: 'macaddr', title: this.$t('MAC-Address') },
-            { dataIndex: 'device', title: this.$t('active-routes.Device') }
+            { title: 'Type' }
           ],
           dragIndex: 3,
           id: 3
+        },
+        {
+          name: 'recent system events',
+          columns: [
+            { title: 'Date' }
+          ],
+          dragIndex: 4,
+          id: 4
+        },
+        {
+          name: 'recent network events',
+          columns: [
+            { title: 'Date' }
+          ],
+          dragIndex: 5,
+          id: 5
         }
       ]
     }
   },
   methods: {
     changePlace () {
-      // this.items.sort((a, b) => a.dragIndex - b.dragIndex)
-      if (this.items[this.esamas].dragIndex > this.items[this.naujas].dragIndex) {
+      if (this.items[this.existingIndex].dragIndex > this.items[this.newDragIndex].dragIndex) {
         for (let index = 0; index < this.items.length; index++) {
-          if (this.items[index].dragIndex > this.items[this.naujas].dragIndex && this.items[index].dragIndex < this.items[this.esamas].dragIndex) {
+          if (this.items[index].dragIndex > this.items[this.newDragIndex].dragIndex && this.items[index].dragIndex < this.items[this.existingIndex].dragIndex) {
             this.items[index].dragIndex += 1
           }
         }
-        this.items[this.esamas].dragIndex = this.items[this.naujas].dragIndex
-        this.items[this.naujas].dragIndex += 1
-      } else if (this.items[this.esamas].dragIndex < this.items[this.naujas].dragIndex) {
+        this.items[this.existingIndex].dragIndex = this.items[this.newDragIndex].dragIndex
+        this.items[this.newDragIndex].dragIndex += 1
+      } else if (this.items[this.existingIndex].dragIndex < this.items[this.newDragIndex].dragIndex) {
         for (let index = 0; index < this.items.length; index++) {
-          if (this.items[index].dragIndex < this.items[this.naujas].dragIndex && this.items[index].dragIndex > this.items[this.esamas].dragIndex) {
+          if (this.items[index].dragIndex < this.items[this.newDragIndex].dragIndex && this.items[index].dragIndex > this.items[this.existingIndex].dragIndex) {
             this.items[index].dragIndex -= 1
           }
         }
-        this.items[this.esamas].dragIndex = this.items[this.naujas].dragIndex
-        this.items[this.naujas].dragIndex -= 1
+        this.items[this.existingIndex].dragIndex = this.items[this.newDragIndex].dragIndex
+        this.items[this.newDragIndex].dragIndex -= 1
       }
       this.items.sort((a, b) => a.dragIndex - b.dragIndex)
-      // this.naujas = -1
-      // this.esamas = -2
     }
   }
 }
