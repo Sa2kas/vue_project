@@ -1,15 +1,22 @@
 <template>
   <div :class="!started ? 'vuci-card' : 'vuci-draggable-card'">
     <div class="vuci-card-header">
-      {{item.name}}
+      {{item.title}}
+      <div style="float: right; display: flex; text-transform: none">
+        <slot name="cpu"></slot>
+      </div>
     </div>
     <div class="vuci-card-body">
-      <div class="card-row" v-for="(column, indexC) in item.columns" :key="indexC">
+      <div v-if="item.title.includes('events')">
+        <slot name="events"></slot>
+      </div>
+      <div class="card-row" v-else v-for="(column, indexC) in item.columns" :key="indexC">
         <div class="card-row-title">
           {{column.title}}
         </div>
         <div class="card-row-data">
-          Data
+          <slot v-if="column.title === 'Memory usage'" name="gauge"></slot>
+          <span v-else>{{column.data}}</span>
         </div>
       </div>
       <slot></slot>
@@ -63,6 +70,13 @@ export default {
     padding: 20px 15px;
     border: 1px solid #e4e4e4;
     border-radius: 7px;
+  }
+  .vuci-card {
+    pointer-events: none;
+  }
+  .vuci-card-header {
+    pointer-events: auto;
+    cursor: grab;
   }
   .vuci-card:hover {
     border: 1px solid #0054a6;
