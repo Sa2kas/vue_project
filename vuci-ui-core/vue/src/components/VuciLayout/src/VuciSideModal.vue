@@ -135,6 +135,5 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  /* font-size: 12px; */
 }
 </style>
