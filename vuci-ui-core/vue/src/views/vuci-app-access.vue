@@ -48,11 +48,7 @@
 </template>
 
 <script>
-import ExpandCollapse from '../components/VuciLayout/src/VuciExpandCollapse.vue'
 export default {
-  components: {
-    ExpandCollapse
-  },
   data () {
     return {
       ssh: {

@@ -2,25 +2,6 @@
   <div class="ntp-general">
     <expand-collapse name="Time synchronisation">
       <form method="POST" @submit.prevent="updateTime">
-        <!-- <div>
-          <label for="current">
-            Current system time
-          </label>
-        </div>
-        <div>
-          <span><b>{{ localTime }}</b></span>
-          <button type="button" class="actionButton" @click="syncTime" role="button">SYNC WITH BROWSER</button>
-          <button type="button" class="actionButton" @click="setDummyTime">DummyTime</button>
-        </div>
-          <div>
-            <label for="timezone">Select Timezone</label>
-          </div>
-        <select name="timezone" @change="selectTimezone($event.target.value)">
-          <option v-for="(zone, index) in $zoneinfo" :key="zone[0]" :value="index" :selected='zoneName == zone[0]'>{{ zone[0] }}</option>
-        </select>
-        <div>
-          <button class="actionButton" type="submit">Save & Apply</button>
-        </div> -->
         <div class="current-time">
           <div class="ntp-general-title">
             <div>
@@ -58,11 +39,7 @@
   </div>
 </template>
 <script>
-import ExpandCollapse from '../components/VuciLayout/src/VuciExpandCollapse.vue'
 export default {
-  components: {
-    ExpandCollapse
-  },
   data () {
     return {
       timezone: 'loading...',

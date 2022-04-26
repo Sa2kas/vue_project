@@ -30,11 +30,7 @@
 </template>
 
 <script>
-import VuciTable from '../components/VuciLayout/src/VuciTable.vue'
 export default {
-  components: {
-    VuciTable
-  },
   data () {
     const validatePass = (rule, value, callback) => {
       if (value === '') {

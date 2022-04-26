@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <a-collapse v-model="activeKey">
-      <a-collapse-panel key="1" header="Command Line Interface">
-        <iframe ref="iframe" src="" srcdoc="" frameborder="0"></iframe>
-      </a-collapse-panel>
-    </a-collapse>
+  <div class="cli">
+    <expand-collapse name="Command Line Interface">
+      <iframe ref="iframe" src="" srcdoc="" frameborder="0"></iframe>
+    </expand-collapse>
   </div>
 </template>
 <script>
@@ -40,8 +38,24 @@ export default {
 
 </script>
 <style scoped>
-iframe {
-  height: 600px;
-  width: 100%;
-}
+  iframe {
+    height: 600px;
+    width: 100%;
+  }
+  .cli {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  @media only screen and (max-width: 500px) {
+    .cli {
+      border: unset;
+    }
+  }
 </style>

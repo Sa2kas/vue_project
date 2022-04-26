@@ -19,11 +19,7 @@
 </template>
 
 <script>
-import VuciTable from '../components/VuciLayout/src/VuciTable.vue'
 export default {
-  components: {
-    VuciTable
-  },
   data () {
     return {
       columns: [
@@ -47,9 +43,9 @@ export default {
   },
   methods: {
     kill (pid, signum) {
-      // this.$rpc.ubus('system', 'signal', { pid, signum }).then(() => {
-      this.$message.success(this.$t('Send signal to', { signum, pid }), 1)
-      // })
+      this.$rpc.ubus('system', 'signal', { pid, signum }).then(() => {
+        this.$message.success(this.$t('Send signal to', { signum, pid }), 1)
+      })
     }
   },
   created () {

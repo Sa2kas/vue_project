@@ -12,11 +12,7 @@
 </template>
 
 <script>
-import VuciTable from '../components/VuciLayout/src/VuciTable.vue'
 export default {
-  components: {
-    VuciTable
-  },
   data () {
     return {
       items: {

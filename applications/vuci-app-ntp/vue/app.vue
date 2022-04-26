@@ -1,69 +1,66 @@
 <template>
-  <div class="box">
-      <div class="section">
-        <h1 class="section-header">
-            NTP Client
-        </h1>
-        <form class="section-body" >
-          <div class="field">
-            <label class="field-label" for="enable">Enable NTP Client</label>
-            <div class="field-input">
-              <input type="checkbox" v-model="ntpClient.enabled">
-            </div>
+  <div class="ntp-ntp">
+    <expand-collapse index=0 name="NTP Client">
+      <form class="section-body" >
+        <div class="field">
+          <label class="field-label" for="enable">Enable NTP Client</label>
+          <div class="field-input">
+            <label class="switch">
+              <input v-model="ntpClient.enabled" type="checkbox">
+              <span class="slider round"></span>
+            </label>
           </div>
-          <div class="field">
-            <label class="field-label" for="enable">Force Servers</label>
-            <div class="field-input">
-              <input type="checkbox" v-model="ntpClient.forceServers">
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="enable">Offset frequency</label>
-            <div class="field-input">
-              <input type="text" v-model="ntpClient.offsetFreq.value" class="input">
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="enable">Update Interval (in seconds)</label>
-            <div class="field-input">
-              <input type="text" v-model="ntpClient.interval" class="input">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="section">
-        <h1 class="section-header">
-          Time Servers
-        </h1>
-        <div class="section-body">
-          <ul>
-            <li v-for="(server, index) in timeServers" :key="server.hostname + index" class="list-item">
-              <div class="has-addons">
-                <input v-model="server.hostname" type="text" class="input" placeholder="my.host.example.com">
-                <input v-model="server.port" class="input w-64" type="text" placeholder="port">
-              </div>
-              <button role="button" class="button primary" @click="removeTimeServer(index)"> &#10006; </button>
-            </li>
-            <li add :key="timeServers.length" class="list-item">
-              <button class="button primary" @click="addTimeServer()">ADD</button>
-            </li>
-          </ul>
         </div>
+        <div class="field">
+          <label class="field-label" for="enable">Force Servers</label>
+          <div class="field-input">
+            <label class="switch">
+              <input v-model="ntpClient.forceServers" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="enable">Update Interval (in seconds)</label>
+          <div class="field-input">
+            <input type="text" v-model="ntpClient.interval" class="input">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="enable">Offset frequency</label>
+          <div class="field-input">
+            <input type="text" v-model="ntpClient.offsetFreq.value" class="input">
+          </div>
+        </div>
+      </form>
+    </expand-collapse>
+      <h3 class="section-title">
+        Hostname
+      </h3>
+      <div class="section-body">
+        <ul>
+          <li v-for="(server, index) in timeServers" :key="server.hostname + index" class="list-item">
+            <input v-model="server.hostname" type="text" class="input" placeholder="my.host.example.com">
+            <button class="iconButton" @click="removeTimeServer(index)"><img src="/icons/remove.svg" alt=""></button>
+          </li>
+          <button class="actionButton" style="float: right;" @click="addTimeServer()">ADD</button>
+        </ul>
       </div>
-      <div class="section">
-        <h1 class="section-header">
-          NTP Server
-        </h1>
+      <expand-collapse index=1 name="NTP Server">
         <div class="section-body">
           <div class="field">
             <label class="field-label" for="enable">Enable NTP Server</label>
             <div class="field-input">
-              <input v-model="ntpServer" type="checkbox" >
+              <label class="switch">
+                <input v-model="ntpServer" type="checkbox">
+                <span class="slider round"></span>
+              </label>
             </div>
           </div>
         </div>
-      </div>
-      <button @click="saveNtpSettings" class="button primary right">Save & Apply</button>
+      </expand-collapse>
+    <button @click="saveNtpSettings" class="actionButton" style="float: right;">Save & Apply</button>
+    <div class="space"/>
   </div>
 </template>
 
@@ -152,132 +149,147 @@ export default {
 </script>
 
 <style>
-.ghost {
-  background: rgba(0,0,0,0.07) !important;
-  text-decoration: underline dotted #2a52be;
-  color: #2a52be;
-}
-.ghost:hover {
-  background: rgba(0,0,0,0.13) !important;
-}
-.w-64 {
-  width: 64px !important;
-}
-.right {
-  align-self: flex-end;
-  margin: 1rem 1rem;
-}
-.box {
-  display: flex;
-  box-sizing: border-box;
-  flex-flow: column nowrap;
-  max-width: 1400px;
-  min-width: 500px;
-  margin: 2rem;
-  border: 1px solid rgba(0,0,0,0.2);
-  border-radius: 1rem;
-}
-.section {
-  padding: 1rem 2rem;
-}
-.section-header {
-  margin: 0.5rem 0.5rem;
-  border-bottom: 1px solid rgba(0,0,0,0.5);
-}
-.section-body {
-  margin: 0.5rem 0rem;
-  display: flex;
-  flex-flow:column nowrap;
-}
-.has-addons {
-  transition: unset !important;
-  display: flex;
-  max-width: 200px;
-  justify-content: flex-start;
-}
-.has-addons > .input {
-  margin-right: 0;
-  width: 180px;
-}
-.has-addons > .input:first-child {
-  border-radius: 0.5rem 0 0 0.5rem;
-}
-.has-addons > .input:last-child {
-  border-radius: 0 0.5rem 0.5rem 0;
-}
-.field {
-  display:flex;
-  flex-flow: row nowrap;
-  align-content: center;
-  justify-content:center;
-}
-.field-label {
-  width: 200px;
-  flex-grow: 1;
-  flex-shrink: 2;
-  font-weight: 500;
-  text-align: right;
-  margin: 0.5rem 1rem;
-}
-.input {
-  flex-grow: 1;
-  border-radius: 0.5rem;
-  max-width: 40ch;
-  width: 40ch;
-  border: 1px solid rgba(0,0,0,0.4);
-  padding: 0.2rem 0.5rem;
-  transition: all 100ms ease-in;
-}
-input:focus {
-  outline: unset;
-  border: 1px solid rgba(82, 168, 236, 0.8) !important;
-  box-shadow: 0px 0px 5px 2px rgba(82, 169, 236, 0.5);
-}
-input:hover {
-  border: 1px solid rgba(0,0,0,0.6);
-}
-.field-input {
-  width: 400px;
-  flex-grow: 1;
-  align-self: center;
-  margin: 0.2rem;
-}
-.list-item {
-  padding: 0.5rem 0.5rem;
-  border-bottom: 1px solid rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: space-between;
-  transition: all 500ms;
-}
-.list-item:hover {
-  background-color: rgba(82, 168, 236, 0.1);
-}
-.button {
-  cursor: pointer;
-  max-width: 175px;
-  border:none;
-  background: white;
-  border-radius: 1rem;
-  padding: 0.35rem 0.7rem;
-  transition: all 100ms ease-in;
-}
-.primary {
-  border: 1px solid #2a52be !important;
-  color: #2a52be !important;
-}
-.primary:hover{
-  background: #2a52be !important;
-  color: white !important;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
-
-@media all and (max-width:900px) {
-.field-label {
-  text-align: left;
-}
-.field {
-  flex-flow: row wrap;
-}
-}
+  .ntp-ntp {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+  }
+  .section {
+    padding: 1rem 2rem;
+  }
+  .section-title {
+    font-family: "Oswald",sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #444;
+    text-transform: uppercase;
+    position: relative;
+    margin-bottom: 0.5em;
+    display: block;
+  }
+  .section-body {
+    margin: 0.5rem 0rem;
+    display: flex;
+    flex-flow:column nowrap;
+  }
+  .section-body ul {
+    padding-left: 0;
+  }
+  .has-addons {
+    transition: unset !important;
+    display: flex;
+    max-width: 200px;
+    justify-content: flex-start;
+  }
+  .field {
+    display:flex;
+    flex-flow: row nowrap;
+    align-content: center;
+    justify-content:center;
+    margin-bottom: 1em;
+  }
+  .field-label {
+    width: 200px;
+    flex-grow: 1;
+    flex-shrink: 2;
+    font-weight: 500;
+    text-align: right;
+    margin: 0.5rem 1rem;
+    font-size: 12px;
+    color: #444;
+  }
+  .input {
+    flex-grow: 1;
+    border-radius: 7px;
+    max-width: 300px;
+    width: 100%;
+    border: 1px solid #a7a7a7;
+    padding: 0.2rem 0.5rem;
+    transition: all 100ms ease-in;
+    color: #000;
+  }
+  input:focus {
+    outline: unset;
+    border: 1px solid rgba(82, 168, 236, 0.8) !important;
+    box-shadow: 0px 0px 5px 2px rgba(82, 169, 236, 0.5);
+  }
+  .field-input {
+    width: 400px;
+    flex-grow: 1;
+    align-self: center;
+    margin: 0.2rem;
+  }
+  .list-item {
+    padding: 0.5rem 0.5rem;
+    border-top: 1px solid #e7e7e7;
+    display: flex;
+    justify-content: space-between;
+    transition: all 500ms;
+  }
+  .list-item:hover {
+    background-color: rgba(82, 168, 236, 0.1);
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+  }
+  .switch input {
+    display: none;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .4s;
+    border: 1px solid #c7c7c7;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 2px;
+    background-color: #c7c7c7;
+    transition: .4s;
+  }
+  input:checked + .slider {
+    background-color: #fff;
+  }
+  input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: #0054a6;
+  }
+  .slider.round {
+    border-radius: 19px;
+  }
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  @media only screen and (max-width: 500px) {
+    .ntp-ntp {
+      border: unset;
+    }
+  }
+  @media all and (max-width:900px) {
+    .field-label {
+      text-align: left;
+    }
+    .field {
+      flex-flow: row wrap;
+    }
+  }
 </style>

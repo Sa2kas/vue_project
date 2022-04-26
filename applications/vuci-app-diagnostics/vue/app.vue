@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <a-input v-model="host" style="width:240px; margin-right: 10px"/>
-    <a-select v-model="tool" style="width:160px">
+  <div class="diagnostics">
+   <expand-collapse name="Diagnostics" index=0>
+      <a-input class="diagnostics_input" v-model="host"/>
+    <a-select class="diagnostics_select" v-model="tool">
       <a-select-option v-for="tool in tools" :key="tool[0]" :value="tool[0]">{{ tool[1] }}</a-select-option>
     </a-select>
-    <a-button type="primary" @click="test" :loading="loading">>></a-button>
-    <a-textarea v-if="stdout !== ''" style="margin-top: 10px" auto-size readonly :value="stdout"/>
+    <button class="actionButton" style="padding-bottom: 5px" @click="test" :loading="loading">>></button>
+    <a-textarea v-if="stdout !== ''" auto-size readonly :value="stdout"/>
     <span v-if="stderr !== ''" style="color: red; display: block">{{ stderr }}</span>
+   </expand-collapse>
   </div>
 </template>
 
@@ -75,3 +77,32 @@ export default {
   }
 }
 </script>
+<style>
+  .diagnostics {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+  }
+  .diagnostics_input {
+    height: 32px;
+    width: 30%;
+    font-family: "Open Sans", sans-serif;
+    margin-right: 10px;
+  }
+  .diagnostics_select {
+    height: 32px;
+    width: 25%;
+    margin-right: 10px;
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  @media only screen and (max-width: 500px) {
+    .diagnostics {
+      border: unset;
+    }
+  }
+</style>

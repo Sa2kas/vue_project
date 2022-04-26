@@ -1,51 +1,50 @@
 <template>
-<div>
-  <a-collapse v-model="activeKey">
-      <a-collapse-panel key="1" header="SSH">
-        <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
-          <a-form-item label="Enable SSH access">
-            <a-switch v-model="ssh.lan" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item  v-if="ssh.lan" label="Enable Remote SSH access">
-            <a-switch v-model="ssh.wan.enabled" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item label="Port">
-            <a-input v-model="ssh.port"/>
-          </a-form-item>
-        </a-form>
-      </a-collapse-panel>
-      <a-collapse-panel key="2" header="WEB UI">
-        <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
-          <a-form-item label="Enable HTTP access">
-            <a-switch v-model="uhttpd.http" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item v-if="uhttpd.http" label="Enable Remote HTTP access">
-            <a-switch v-model="webui.wanHTTP.enabled" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item v-if="uhttpd.http" label="Port">
-            <a-input v-model="webui.wanHTTP.port"/>
-          </a-form-item>
-        </a-form>
-      </a-collapse-panel>
-      <a-collapse-panel key="3" header="CLI">
-        <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
-          <a-form-item label="Enable CLI">
-            <a-switch v-model="cli.lan" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item v-if="cli.lan" label="Enable remote CLI">
-            <a-switch v-model="cli.wan.enabled" checked-children="1" un-checked-children="0"/>
-          </a-form-item>
-          <a-form-item label="Port Range">
-            <a-input v-model="cli.portRange"/>
-          </a-form-item>
-        </a-form>
-      </a-collapse-panel>
-  </a-collapse>
-  <div style="display:flex; justify-content: flex-end; margin:2rem;">
-    <a-button @click="handleSubmit" style="margin-right: 0.5rem;" type="primary">Save & Apply</a-button>
-    <a-button type="danger">Reset</a-button>
+  <div class="access">
+    <expand-collapse index="0" name="SSH">
+      <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
+        <a-form-item label="Enable SSH access">
+          <a-switch v-model="ssh.lan" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item  v-if="ssh.lan" label="Enable Remote SSH access">
+          <a-switch v-model="ssh.wan.enabled" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item label="Port">
+          <a-input v-model="ssh.port"/>
+        </a-form-item>
+      </a-form>
+    </expand-collapse>
+    <expand-collapse index="1" name="WEB UI">
+      <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
+        <a-form-item label="Enable HTTP access">
+          <a-switch v-model="uhttpd.http" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item v-if="uhttpd.http" label="Enable Remote HTTP access">
+          <a-switch v-model="webui.wanHTTP.enabled" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item v-if="uhttpd.http" label="Port">
+          <a-input v-model="webui.wanHTTP.port"/>
+        </a-form-item>
+      </a-form>
+    </expand-collapse>
+    <expand-collapse index="2" name="CLI">
+      <a-form :label-col="{ span:8 }" :wrapper-col="{ span: 6 }">
+        <a-form-item label="Enable CLI">
+          <a-switch v-model="cli.lan" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item v-if="cli.lan" label="Enable remote CLI">
+          <a-switch v-model="cli.wan.enabled" checked-children="1" un-checked-children="0"/>
+        </a-form-item>
+        <a-form-item label="Port Range">
+          <a-input v-model="cli.portRange"/>
+        </a-form-item>
+      </a-form>
+    </expand-collapse>
+    <div class="access-actions">
+      <button class="actionButton" @click="handleSubmit" type="primary">Save & Apply</button>
+      <button class="actionButton" type="danger">Reset</button>
+    </div>
+    <div class="space"/>
   </div>
-</div>
 </template>
 
 <script>
@@ -196,6 +195,25 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+  .access {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+  }
+  .access-actions {
+    float: right;
+    margin-top: 10px;
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  @media only screen and (max-width: 500px) {
+    .access {
+      border: unset;
+    }
+  }
 </style>

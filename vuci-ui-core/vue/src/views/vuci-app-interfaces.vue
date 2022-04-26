@@ -57,18 +57,13 @@ import ProtoNone from './interfaces/proto/None.vue'
 import ProtoDhcp from './interfaces/proto/Dhcp.vue'
 import ProtoStatic from './interfaces/proto/Static.vue'
 import ProtoPppoe from './interfaces/proto/Pppoe.vue'
-
-import ExpandCollapse from '../components/VuciLayout/src/VuciExpandCollapse.vue'
-import Modal from '../components/VuciLayout/src/VuciModal.vue'
 export default {
   components: {
     NetworkBadge,
     ProtoNone,
     ProtoDhcp,
     ProtoStatic,
-    ProtoPppoe,
-    Modal,
-    ExpandCollapse
+    ProtoPppoe
   },
   data () {
     return {

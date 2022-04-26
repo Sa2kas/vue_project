@@ -65,11 +65,7 @@
 </template>
 
 <script>
-import ExpandCollapse from '../components/VuciLayout/src/VuciExpandCollapse.vue'
 export default {
-  components: {
-    ExpandCollapse
-  },
   data () {
     return {
       ntpClient: {
@@ -272,16 +268,11 @@ export default {
   }
   input:checked + .slider {
     background-color: #fff;
-
   }
-  /* input:focus + .slider {
-    box-shadow: 0 0 1px #a6001c;
-  } */
   input:checked + .slider:before {
     transform: translateX(18px);
     background-color: #0054a6;
   }
-  /* Rounded sliders */
   .slider.round {
     border-radius: 19px;
   }

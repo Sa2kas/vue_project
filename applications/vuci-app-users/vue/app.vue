@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <a-button type="primary" style="margin-bottom: 10px" @click="showAdd">{{ $t('Add') }}</a-button>
-    <a-table :columns="columns" :data-source="dataSource">
-      <template #edit="text">
-        <a-button type="primary" size="small" @click="showEdit(text)" style="margin-right: 10px">{{ $t('Edit') }}</a-button>
-        <a-button :disabled="text.username === 'admin'" type="danger" size="small" @click="handleDelete(text.username)">{{ $t('Delete') }}</a-button>
+  <div class="users">
+    <vuci-table :item="item" name="users">
+      <template v-slot:tableData="slotProps">
+        <span v-if="slotProps.column.key == 'edit'">
+          <button class="iconButton" @click="showEdit(text)"><img src="/icons/edit.png" alt=""></button>
+          <button class="iconButton disabled" :disabled="slotProps.data.username === 'admin'" @click="handleDelete(text.username)"><img src="/icons/delete.png" alt=""></button>
+        </span>
       </template>
-    </a-table>
+    </vuci-table>
     <a-modal v-model="dialogVisible" :title="add ? $t('Add') : $t('Edit')" @cancel="handleCancel" @ok="handleEdit">
       <a-form-model :model="edit" ref="edit" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-model-item :label="$t('users.username')" prop="username">
@@ -23,6 +24,8 @@
         </a-form-model-item>
       </a-form-model>
     </a-modal>
+    <button class="actionButton" style="float: right;" type="primary" @click="showAdd">{{ $t('Add') }}</button>
+    <div class="space"/>
   </div>
 </template>
 
@@ -87,6 +90,10 @@ export default {
         v.key = i
         return v
       })
+    },
+    item () {
+      const item = { columns: this.columns, data: this.dataSource }
+      return item
     }
   },
   methods: {
@@ -145,3 +152,28 @@ export default {
   }
 }
 </script>
+<style>
+  .users {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  @media only screen and (max-width: 500px) {
+    .users {
+      border: unset;
+    }
+  }
+  .iconButton img{
+    height: 24px;
+  }
+  .disabled {
+    cursor: auto;
+    opacity: 50%;
+  }
+</style>

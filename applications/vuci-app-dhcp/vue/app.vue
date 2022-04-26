@@ -1,72 +1,79 @@
 <template>
-  <vuci-form uci-config="dhcp" @applied="onApplied">
-    <vuci-typed-section :title="$t('dhcp.Server Settings')" type="dnsmasq" :collapsible="false" v-slot="{ s }" style="margin-bottom: 20px">
-      <a-tabs>
-        <a-tab-pane key="general" :tab="$t('General Settings')">
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Domain required')" name="domainneeded" initial/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Authoritative')" name="authoritative" initial/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Local server')" name="local" required/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Local domain')" name="domain" required/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Log queries')" name="logqueries" initial/>
-          <vuci-form-item-list :uci-section="s" :label="$t('dhcp.DNS forwardings')" name="server"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Rebind protection')" name="rebind_protection" initial/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Allow localhost')" name="rebind_localhost" depend="rebind_protection"/>
-          <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Domain whitelist')" name="rebind_domain" depend="rebind_protection" rules="host"/>
-        </a-tab-pane>
-        <a-tab-pane key="resolv" :tab="$t('dhcp.Resolv and Hosts Files')">
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Use /etc/ethers')" name="readethers"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Leasefile')" name="leasefile"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore resolve file')" name="noresolv"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Resolve file')" name="resolvfile" depend="!noresolv"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore /etc/hosts')" name="nohosts"/>
-          <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Additional Hosts files')" name="addnhosts"/>
-        </a-tab-pane>
-        <a-tab-pane key="advanced" :tab="$t('Advanced Settings')">
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Suppress logging')" name="quietdhcp"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Allocate IP sequentially')" name="sequential_ip"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Filter private')" name="boguspriv"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Filter useless')" name="filterwin2k"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Localise queries')" name="localise_queries"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Expand hosts')" name="expandhosts" initial/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.No negative cache')" name="nonegcache"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Strict order')" name="strictorder"/>
-          <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Bogus NX Domain Override')" name="bogusnxdomain"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.DNS server port')" name="port" placeholder="53" rules="port"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.DNS query port')" name="queryport" placeholder="any" rules="port"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max DHCP leases')" name="dhcpleasemax" placeholder="unlimited" rules="uinteger"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max EDNS0 packet size')" name="ednspacket_max" placeholder="1280" rules="uinteger"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max concurrent queries')" name="dnsforwardmax" placeholder="150" rules="uinteger"/>
-        </a-tab-pane>
-      </a-tabs>
-    </vuci-typed-section>
-    <vuci-typed-section :title="$t('dhcp.DHCP Server')" type="dhcp"  v-slot="{ s }" style="margin-bottom: 20px">
-      <a-tabs>
-        <a-tab-pane key="general" :tab="$t('General Settings')">
-          <vuci-form-item-dummy :uci-section="s" :label="$t('dhcp.Interface')" name="interface"/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore interface')" name="ignore"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Start')" name="start" placeholder="100" rules="uinteger"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Limit')" name="limit" placeholder="150" rules="uinteger"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Leasetime')" name="leasetime" placeholder="12h" :rules="validateLeasetime"/>
-        </a-tab-pane>
-        <a-tab-pane key="advanced" :tab="$t('Advanced Settings')">
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Dynamic DHCP')" name="dynamicdhcp" initial/>
-          <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Force')" name="force"/>
-          <vuci-form-item-input :uci-section="s" :label="$t('IPv4-Netmask')" name="netmask" rules="ip4addr"/>
-        </a-tab-pane>
-      </a-tabs>
-    </vuci-typed-section>
-    <vuci-typed-section :title="$t('dhcp.Static Leases')" type="host" :columns="hostColumns" addremove >
-      <template #name="{ s }">
-        <vuci-form-item-input :uci-section="s" name="name" rules="hostname"/>
-      </template>
-      <template #mac="{ s }">
-        <vuci-form-item-select :uci-section="s" name="mac" required rules="macaddr" :options="arp.macaddrs" allow-create/>
-      </template>
-      <template #ip="{ s }">
-        <vuci-form-item-select :uci-section="s" name="ip" required rules="ip4addr" :options="arp.ipaddrs" allow-create/>
-      </template>
-    </vuci-typed-section>
-  </vuci-form>
+  <div class="dhcp">
+    <vuci-form uci-config="dhcp" @applied="onApplied">
+      <expand-collapse name="Server Settings" index=0>
+        <vuci-typed-section :title="$t('dhcp.Server Settings')" type="dnsmasq" :collapsible="false" v-slot="{ s }" style="margin-bottom: 20px">
+          <a-tabs>
+            <a-tab-pane key="general" :tab="$t('General Settings')">
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Domain required')" name="domainneeded" initial/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Authoritative')" name="authoritative" initial/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Local server')" name="local" required/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Local domain')" name="domain" required/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Log queries')" name="logqueries" initial/>
+              <vuci-form-item-list :uci-section="s" :label="$t('dhcp.DNS forwardings')" name="server"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Rebind protection')" name="rebind_protection" initial/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Allow localhost')" name="rebind_localhost" depend="rebind_protection"/>
+              <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Domain whitelist')" name="rebind_domain" depend="rebind_protection" rules="host"/>
+            </a-tab-pane>
+            <a-tab-pane key="resolv" :tab="$t('dhcp.Resolv and Hosts Files')">
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Use /etc/ethers')" name="readethers"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Leasefile')" name="leasefile"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore resolve file')" name="noresolv"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Resolve file')" name="resolvfile" depend="!noresolv"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore /etc/hosts')" name="nohosts"/>
+              <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Additional Hosts files')" name="addnhosts"/>
+            </a-tab-pane>
+            <a-tab-pane key="advanced" :tab="$t('Advanced Settings')">
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Suppress logging')" name="quietdhcp"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Allocate IP sequentially')" name="sequential_ip"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Filter private')" name="boguspriv"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Filter useless')" name="filterwin2k"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Localise queries')" name="localise_queries"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Expand hosts')" name="expandhosts" initial/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.No negative cache')" name="nonegcache"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Strict order')" name="strictorder"/>
+              <vuci-form-item-list :uci-section="s" :label="$t('dhcp.Bogus NX Domain Override')" name="bogusnxdomain"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.DNS server port')" name="port" placeholder="53" rules="port"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.DNS query port')" name="queryport" placeholder="any" rules="port"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max DHCP leases')" name="dhcpleasemax" placeholder="unlimited" rules="uinteger"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max EDNS0 packet size')" name="ednspacket_max" placeholder="1280" rules="uinteger"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Max concurrent queries')" name="dnsforwardmax" placeholder="150" rules="uinteger"/>
+            </a-tab-pane>
+          </a-tabs>
+        </vuci-typed-section>
+      </expand-collapse>
+      <expand-collapse name="DHCP Server" index=1>
+        <vuci-typed-section :title="$t('dhcp.DHCP Server')" type="dhcp"  v-slot="{ s }" style="margin-bottom: 20px" :collapsible="false">
+          <div class="dhcp-title">{{s['.name']}}</div>
+          <a-tabs>
+            <a-tab-pane key="general" :tab="$t('General Settings')">
+              <vuci-form-item-dummy :uci-section="s" :label="$t('dhcp.Interface')" name="interface"/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Ignore interface')" name="ignore"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Start')" name="start" placeholder="100" rules="uinteger"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Limit')" name="limit" placeholder="150" rules="uinteger"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('dhcp.Leasetime')" name="leasetime" placeholder="12h" :rules="validateLeasetime"/>
+            </a-tab-pane>
+            <a-tab-pane key="advanced" :tab="$t('Advanced Settings')">
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Dynamic DHCP')" name="dynamicdhcp" initial/>
+              <vuci-form-item-switch :uci-section="s" :label="$t('dhcp.Force')" name="force"/>
+              <vuci-form-item-input :uci-section="s" :label="$t('IPv4-Netmask')" name="netmask" rules="ip4addr"/>
+            </a-tab-pane>
+          </a-tabs>
+        </vuci-typed-section>
+      </expand-collapse>
+      <vuci-typed-section :title="$t('dhcp.Static Leases')" type="host" :columns="hostColumns" addremove index=3>
+        <template v-slot:name="{ s }">
+          <vuci-form-item-input :uci-section="s" name="name" rules="hostname"/>
+        </template>
+        <template v-slot:mac="{ s }">
+          <vuci-form-item-select :uci-section="s" name="mac" required rules="macaddr" :options="arp.macaddrs" allow-create/>
+        </template>
+        <template v-slot:ip="{ s }">
+          <vuci-form-item-select :uci-section="s" name="ip" required rules="ip4addr" :options="arp.ipaddrs" allow-create/>
+        </template>
+      </vuci-typed-section>
+    </vuci-form>
+  </div>
 </template>
 
 <script>
@@ -119,3 +126,14 @@ export default {
   }
 }
 </script>
+<style>
+  .dhcp-title {
+    color: #444;
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+    border-bottom: 1px solid #a7a7a7;
+    margin-bottom: 1em;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+  }
+</style>

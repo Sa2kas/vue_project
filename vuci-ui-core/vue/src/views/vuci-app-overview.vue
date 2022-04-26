@@ -12,14 +12,14 @@
           :class="item.show ? 'checked-item-input' : 'item-input'"
         />
         <label for="item" class="item-name">
-          <div class="label">{{item.name}}</div>
+          <div class="overview-element-label">{{item.title}}</div>
         </label>
       </div>
     </template>
     </vuci-side-modal>
     <div v-for="item in items" :key="item.id" class="overview-element" :style="[item.show ? {'display': 'block'} : {'display': 'none'}]"
       @dragover="newDragIndex = item.dragIndex;changePlace();"
-      @dragend="started = false; existingIndex = -2; newDragIndex = -1" @drag="existingIndex = item.dragIndex" @dragstart="started = true"
+      @dragend="savePlace()" @drag="existingIndex = item.dragIndex" @dragstart="started = true"
         >
         <vuci-card
           :style="[!(started && existingIndex == item.dragIndex) ? {'display': 'block'} : {'opacity': '40%'}]"
@@ -30,14 +30,14 @@
           draggable
           >
           <template v-slot:cpu v-if="item.name === 'system'">
-            <vuci-gauge title="cpu" :percent="cpuPercentage"/>
+            <vuci-gauge title="CPU load" :percent="cpuPercentage"/>
           </template>
           <template v-slot:gauge>
-            <vuci-gauge title="ram" :percent="ramPercentage"/>
-            <vuci-gauge title="flash" :percent="storagePercentage"/>
+            <vuci-gauge title="RAM" :percent="ramPercentage"/>
+            <vuci-gauge title="FLASH" :percent="storagePercentage"/>
           </template>
           <template v-slot:events v-if="item.name === 'netEvents'">
-            <div class="card-row" v-for="(event, indexE) in networkEvents" :key="indexE">
+            <div class="card-row" v-for="(event, indexE) in syslog" :key="indexE">
               <div class="card-row-title" v-if="event">
                 {{event.datetime}}
               </div>
@@ -47,10 +47,9 @@
             </div>
           </template>
           <template v-slot:events v-else-if="item.name === 'sysEvents'">
-            <div class="card-row" v-for="(event, indexE) in systemEvents" :key="indexE">
+            <div class="card-row" v-for="(event, indexE) in dmesg" :key="indexE">
               <div class="card-row-title" v-if="event">
                 {{new Date(event.time * 1000).toLocaleString()}}
-                <!-- {{event.time}} -->
               </div>
               <div class="card-row-data" v-if="event">
                 {{event.msg}}
@@ -63,15 +62,7 @@
   </div>
 </template>
 <script>
-import VuciSideModal from '../components/VuciLayout/src/VuciSideModal.vue'
-import VuciCard from '../components/VuciLayout/src/VuciCard.vue'
-import VuciGauge from '../components/VuciLayout/src/VuciGauge.vue'
 export default {
-  components: {
-    VuciCard,
-    VuciSideModal,
-    VuciGauge
-  },
   data () {
     return {
       configFile: 'overview',
@@ -162,28 +153,6 @@ export default {
       ]
     }
   },
-  computed: {
-    networkEvents () {
-      var foo = []
-      for (let index = Object.keys(this.syslog).length - 4; index < Object.keys(this.syslog).length; index++) {
-        if (foo.length > 3) {
-          foo.shift()
-        }
-        foo.push(this.syslog[index])
-      }
-      return foo.reverse()
-    },
-    systemEvents () {
-      var foo = []
-      for (let index = Object.keys(this.dmesg).length - 4; index < Object.keys(this.dmesg).length; index++) {
-        if (foo.length > 3) {
-          foo.shift()
-        }
-        foo.push(this.dmesg[index])
-      }
-      return foo.reverse()
-    }
-  },
   timers: {
     update: { time: 2000, autostart: true, immediate: true, repeat: true },
     updateCpuUsage: { time: 1000, autostart: true, immediate: true, repeat: true },
@@ -222,25 +191,28 @@ export default {
         for (let index = 0; index < this.items.length; index++) {
           if (this.items[index].dragIndex > newPlace && this.items[index].dragIndex < existingPlace) {
             this.items[index].dragIndex += 1
-            this.updateItem(this.items[index])
           }
         }
         this.items[this.existingIndex].dragIndex = newPlace
-        this.updateItem(this.items[this.existingIndex])
         this.items[this.newDragIndex].dragIndex += 1
-        this.updateItem(this.items[this.newDragIndex])
       } else if (existingPlace < newPlace) {
         for (let index = 0; index < this.items.length; index++) {
           if (this.items[index].dragIndex < newPlace && this.items[index].dragIndex > existingPlace) {
             this.items[index].dragIndex -= 1
-            this.updateItem(this.items[index])
           }
         }
         this.items[this.existingIndex].dragIndex = newPlace
-        this.updateItem(this.items[this.existingIndex])
         this.items[this.newDragIndex].dragIndex -= 1
-        this.updateItem(this.items[this.newDragIndex])
       }
+      this.items.sort((a, b) => a.dragIndex - b.dragIndex)
+    },
+    savePlace () {
+      this.started = false
+      this.existingIndex = -2
+      this.newDragIndex = -1
+      this.items.forEach(element => {
+        this.updateItem(element)
+      })
       this.saveConfig()
     },
     showHideCard (item) {
@@ -255,21 +227,16 @@ export default {
           this.lastCPUTime = times
           return
         }
-
         const idle1 = this.lastCPUTime[3]
         const idle2 = times[3]
-
         let total1 = 0
         let total2 = 0
-
         this.lastCPUTime.forEach(t => {
           total1 += t
         })
-
         times.forEach(t => {
           total2 += t
         })
-
         this.cpuPercentage = (((total2 - total1 - (idle2 - idle1)) / (total2 - total1)) * 100).toFixed(2)
         this.lastCPUTime = times
       })
@@ -323,21 +290,18 @@ export default {
       })
       this.saveConfig()
     }
-
     this.loadInterfaces()
-
     this.$rpc.call('system', 'syslog').then(({ log }) => {
       this.syslog = log.map((v, i) => {
         v.key = i
         return v
-      })
+      }).slice(-4)
     })
-
     this.$rpc.call('system', 'dmesg').then(({ log }) => {
       this.dmesg = log.map((v, i) => {
         v.key = i
         return v
-      })
+      }).slice(-4)
       this.loading = false
     })
   },

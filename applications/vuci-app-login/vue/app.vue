@@ -5,16 +5,14 @@
         <img class="teltonika" src="/icons/teltonika.svg" alt="teltonika">
         <div class="login-title">{{ $t("login.Authorization Required") }}</div>
         <div class="login-info">
-          <!-- naudojamas paparastas tekstas, nes neveikia translate failo atnaujinimas -->
           Please enter your username and password
-          <!-- {{ $t("login.Please enter your username and password") }} -->
         </div>
       </div>
       <div class="login-right">
         <form :model="form" onsubmit="return false">
           <div class="form-div">
             <input v-model="form.username" @pressEnter="handleLogin" :placeholder="$t('login.Please input username')"/>
-            <label>Username</label>
+            <label class="form-label">Username</label>
           </div>
           <div class="form-div">
             <input id="password" v-model="form.password" @pressEnter="handleLogin" type="password" :placeholder="$t('login.Please input password')"/>
@@ -160,7 +158,7 @@ input:focus {
   cursor: pointer;
   z-index: 5;
 }
-label {
+.form-label {
   position: absolute;
   /* sito nereik, bet tada neatrodo taip nukirsta */
   background: linear-gradient(to right, #ffffff00 0%, #ffffff 5px, #ffffff calc(100% - 5px), #ffffff00 100%);

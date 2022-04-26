@@ -1,29 +1,43 @@
 <template>
-  <div class="background">
-    <form method="POST" @submit.prevent="updateTime">
-      <div class="right-align">
-          <label for="current">
-            Current system time
-          </label>
-      </div>
-      <div class="left-align">
-          <span><b>{{ localTime }}</b></span>
-          <button type="button" class="button" @click="syncTime" role="button" style="margin:0 1rem;">SYNC WITH BROWSER</button>
-          <button type="button" class="button" @click="setDummyTime">DummyTime</button>
-      </div>
-        <div class="right-align">
-          <label for="timezone">Select Timezone</label>
+  <div class="ntp-general">
+    <expand-collapse name="Time synchronisation">
+      <form method="POST" @submit.prevent="updateTime">
+        <div class="current-time">
+          <div class="ntp-general-title">
+            <div>
+              Current system time
+            </div>
+          </div>
+          <div class="ntp-general-data">
+            <span>{{ localTime }}</span>
+          </div>
         </div>
-      <select class="left-align" name="timezone" @change="selectTimezone($event.target.value)">
-          <option v-for="(zone, index) in $zoneinfo" :key="zone[0]" :value="index" :selected='zoneName == zone[0]'>{{ zone[0] }}</option>
-      </select>
-      <div class="span-2 right-align mr-3">
-        <button class="button" type="submit">Save & Apply</button>
+        <div class="ntp-general-sync">
+          <div class="ntp-general-title"/>
+          <div class="ntp-general-data">
+            <button type="button" class="actionButton" @click="syncTime" role="button">SYNC WITH BROWSER</button>
+            <button type="button" class="actionButton" @click="setDummyTime">DummyTime</button>
+          </div>
+        </div>
+        <div class="select-time">
+          <div class="ntp-general-title">
+            <div>
+              Time zone
+            </div>
+          </div>
+          <div class="ntp-general-data">
+            <select name="timezone" @change="selectTimezone($event.target.value)">
+              <option v-for="(zone, index) in $zoneinfo" :key="zone[0]" :value="index" :selected='zoneName == zone[0]'>{{ zone[0] }}</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="ntp-general-actions">
+        <button class="actionButton" type="submit">Save & Apply</button>
       </div>
-    </form>
+    </expand-collapse>
   </div>
 </template>
-
 <script>
 export default {
   data () {
@@ -88,46 +102,71 @@ export default {
 </script>
 
 <style scoped>
-.background {
-  display: flex;
-  align-items: center;
-  height: 400px;
-}
-
-form {
-  display: grid;
-  justify-items: center;
-  grid-template-columns: auto auto;
-  gap: 1rem 1rem;
-  width: 100%;
-}
-
-.left-align {
-  justify-self: left;
-}
-.right-align {
-  justify-self: right;
-}
-.center-align {
-  justify-self:stretch;
-}
-.span-2 {
-  grid-column: span 2;
-}
-.mr-3 {
-  margin-right: 3rem;
-}
-.button {
-  cursor: pointer;
-  padding: 0.3rem 0.5rem;
-  border-radius: 10px;
-  color: rgb(28, 53, 128);
-  border: 1px solid rgb(15, 53, 165);
-  transition: all 100ms ease-in ;
-}
-.button:hover {
-  background: rgb(28, 53, 128);
-  color: white;
-}
-
+  .ntp-general {
+    border: 1px solid #e4e4e4;
+    border-radius: 7px;
+    padding: 10px 38px 38px 38px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+  }
+  .current-time {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .ntp-general-title {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .ntp-general-title div {
+    position: relative;
+    padding-right: 1rem;
+  }
+  .ntp-general-data {
+    display: flex;
+    width: 65%;
+    flex-grow: 1;
+    position: relative;
+  }
+  .ntp-general-data select {
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #444;
+    background-color: #fff;
+    border: 1px solid #a7a7a7;
+    font-size: 11px;
+    padding: 5.5px 24px 5.5px 11px;
+    border-radius: 7px;
+    outline: unset;
+  }
+  .ntp-general-sync {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .select-time {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .ntp-general-actions {
+    float: right;
+  }
+  .space {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+  @media only screen and (max-width: 500px) {
+    .ntp-general {
+      border: unset;
+    }
+  }
 </style>
